@@ -3,7 +3,7 @@ from pathlib import Path
 from flask import Flask, render_template, request, send_from_directory, send_file
 from flask_dropzone import Dropzone
 from werkzeug.utils import secure_filename
-from app.utils import undistort, remove_old_files
+from utils import undistort, remove_old_files
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -49,3 +49,6 @@ def download_file(filename):
     except:
         pass
     return send_file(os.path.join(app.config['DOWNLOAD_PATH'], filename), mimetype='application/json', download_name=save_name, as_attachment=True)
+
+if __name__ == "__main__":
+        app.run(debug=True)
