@@ -50,5 +50,9 @@ def download_file(filename):
         pass
     return send_file(os.path.join(app.config['DOWNLOAD_PATH'], filename), mimetype='application/json', download_name=save_name, as_attachment=True)
 
+@app.route('/favicon.ico') 
+def favicon(): 
+    return send_from_directory(os.path.join(basedir, 'static'), 'favicon.ico')
+
 if __name__ == "__main__":
         app.run(debug=True)
