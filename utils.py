@@ -33,7 +33,15 @@ def undistort(file):
         camera_intrinsics = json.load(stream)
 
     if camera_intrinsics['camera_model'] == 'radial':
-        json_object = json.dumps(camera_intrinsics, indent=2)
+        # We calibrate on undistort images, so we set K1-K6 & P1-P2 to zero 
+        output = template()
+        output['intrinsics']['Fx'] = camera_intrinsics["intrinsics"]["Fx"]
+        output['intrinsics']['Fy'] = camera_intrinsics["intrinsics"]["Fy"]
+        output['intrinsics']['Cx'] = camera_intrinsics["intrinsics"]["Cx"]
+        output['intrinsics']['Cy'] = camera_intrinsics["intrinsics"]["Cy"]
+        
+        # Serializing json
+        json_object = json.dumps(output, indent=2)
     
     else: 
         Cx = camera_intrinsics["intrinsics"]["Cx"]

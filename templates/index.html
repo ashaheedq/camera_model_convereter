@@ -55,11 +55,15 @@
 
         this.on("success", function(file) {
           // var outname = document.getElementById("mydiv").dataset.outname; 
-          var downloadButton = Dropzone.createElement('<a class=button>Download</a>')
+          if (file.name.split(".").pop().toLowerCase() == "json") {
+            var downloadButton = Dropzone.createElement('<a class=button>Download</a>')
+            var new_name = file.name.replace('_fisheye', `_${ts}`) 
           var new_name = file.name.replace('_fisheye', `_${ts}`) 
-          downloadButton.setAttribute('href',`/download/${new_name}`);
-          var name = ts;
-          console.log(name);
+            var new_name = file.name.replace('_fisheye', `_${ts}`) 
+            downloadButton.setAttribute('href',`/download/${new_name}`);
+            var name = ts;
+            console.log(name);
+          }
 
           // var downloadButton = Dropzone.createElement('<a href="http://www.google.com" target="_parent"><button>Click me !</button></a>')
           // var downloadButton = Dropzone.createElement('<a href="http://www.google.com" target="_parent"><button>Click me !</button></a>')

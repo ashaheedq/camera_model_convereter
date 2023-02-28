@@ -12,6 +12,7 @@ app.config.update(
     DOWNLOAD_PATH= os.path.join(basedir, 'output'),
     DROPZONE_ALLOWED_FILE_CUSTOM='True',
     DROPZONE_ALLOWED_FILE_TYPE='.json',
+    DROPZONE_DEFAULT_MESSAGE='Drop .json files to convert them',
     DROPZONE_MAX_FILE_SIZE = 1024,
     DROPZONE_TIMEOUT = 5*60*1000,
     SEND_FILE_MAX_AGE_DEFAULT= -1)
@@ -23,8 +24,11 @@ dropzone = Dropzone(app)
 @app.route('/',methods=['POST','GET'])
 def upload():
     # runs this everytime a user uploads a file
-    remove_old_files(app.config['DOWNLOAD_PATH'])
-
+    try:
+        remove_old_files(app.config['DOWNLOAD_PATH'])
+    except:
+        print("could not delete files")
+        pass
     if request.method == 'POST':
         try:
             file = request.files['file']
