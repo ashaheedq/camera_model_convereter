@@ -57,9 +57,12 @@
           // var outname = document.getElementById("mydiv").dataset.outname; 
           if (file.name.split(".").pop().toLowerCase() == "json") {
             var downloadButton = Dropzone.createElement('<a class=button>Download</a>')
-            var new_name = file.name.replace('_fisheye', `_${ts}`) 
-          var new_name = file.name.replace('_fisheye', `_${ts}`) 
-            var new_name = file.name.replace('_fisheye', `_${ts}`) 
+            if (file.name.includes('fisheye')) {
+              var new_name = file.name.replace('_fisheye', `_${ts}`) 
+            }
+            else {
+              var new_name = file.name.split('.')[0] + `_${ts}.json`
+            }
             downloadButton.setAttribute('href',`/download/${new_name}`);
             var name = ts;
             console.log(name);
