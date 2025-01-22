@@ -24,9 +24,8 @@ def template():
     }
     return output
 
-def undistort(file):
+def undistort(file, output_path):
     # Fisheye to Radial intrinsics 
-
     cameraName = file.split('/')[-1].split('.')[0]
     print(file)
     with open(file, 'r') as stream:
@@ -39,7 +38,7 @@ def undistort(file):
         output['intrinsics']['Fy'] = camera_intrinsics["intrinsics"]["Fy"]
         output['intrinsics']['Cx'] = camera_intrinsics["intrinsics"]["Cx"]
         output['intrinsics']['Cy'] = camera_intrinsics["intrinsics"]["Cy"]
-        
+
         # Serializing json
         json_object = json.dumps(output, indent=2)
     
@@ -58,15 +57,15 @@ def undistort(file):
                 [0,  0, 1]])
         distortion = np.array([K1, K2, K3, K4])
 
-        #scale the intrinsics to keep the FOV
-        scaled_K = 1*intrinsics
+        # Scale the intrinsics to keep the FOV
+        scaled_K = 1 * intrinsics
         offset_h_1 = 300
         offset_h_2 = 700
         if cameraName == "BPillarLeftCamera" or cameraName == 'BPillarRightCamera':
             offset_h_1 = 300
             offset_h_2 = 300
-        scaled_K[0][2] = intrinsics[0][2]*2
-        scaled_K[1][2] = intrinsics[1][2]*2-offset_h_1
+        scaled_K[0][2] = intrinsics[0][2] * 2
+        scaled_K[1][2] = intrinsics[1][2] * 2 - offset_h_1
         output = template()
         output['intrinsics']['Fx'] = scaled_K[0][0]
         output['intrinsics']['Fy'] = scaled_K[1][1]
@@ -76,14 +75,8 @@ def undistort(file):
         # Serializing json
         json_object = json.dumps(output, indent=2)
 
-    # Writing to sample.json
-    try:
-        cameraName = cameraName.replace('_fisheye', '')
-    except:
-        pass
-
     newname = cameraName + ".json"
-    with open("output/"+newname, "w") as outfile:
+    with open(os.path.join(output_path, newname), "w") as outfile:
         outfile.write(json_object)
     
     return newname
@@ -103,11 +96,3 @@ def allowed_files(filename):
         'BPillarLeftCamera.json',
     ]
     return True if filename in cams else False
-
-def remove_old_files(path):
-    current_time = time.time()
-    for f in os.listdir(path):
-        creation_time = os.path.getctime(f)
-        if (current_time - creation_time) // (24 * 3600) >= 7:
-            os.unlink(f)
-            print('{} removed'.format(f))
