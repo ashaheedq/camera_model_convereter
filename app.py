@@ -34,6 +34,10 @@ def allowed_file(filename):
 def upload():
     if request.method == 'POST':
         try:
+            # Get user-provided offsets or set defaults
+            offset_h1 = int(request.form.get('offset_h1', 300))  # Default: 300
+            offset_h2 = int(request.form.get('offset_h2', 700))  # Default: 700
+
             files = request.files.getlist('file')  # Handle multiple files
             ts = request.form.get('timestamp', '')  # Ensure timestamp is optional
 
@@ -44,9 +48,9 @@ def upload():
                     save_location = os.path.join(app.config['UPLOADED_PATH'], new_filename)
                     file.save(save_location)
 
-                    # Process the file
-                    output_file = undistort(save_location, app.config['DOWNLOAD_PATH'])
-                    
+                    # Pass offsets to the processing function
+                    output_file = undistort(save_location, app.config['DOWNLOAD_PATH'], offset_h1, offset_h2)
+
             # Clean up only after processing all files
             [f.unlink() for f in Path(app.config['UPLOADED_PATH']).glob("*") if f.is_file()]
         except Exception as e:

@@ -24,7 +24,7 @@ def template():
     }
     return output
 
-def undistort(file, output_path):
+def undistort(file, output_path, offset_h1=300, offset_h2=700):
     # Fisheye to Radial intrinsics 
     cameraName = file.split('/')[-1].split('.')[0]
     print(file)
@@ -59,19 +59,14 @@ def undistort(file, output_path):
 
         # Scale the intrinsics to keep the FOV
         scaled_K = 1 * intrinsics
-        offset_h_1 = 300
-        offset_h_2 = 700
-        if cameraName == "BPillarLeftCamera" or cameraName == 'BPillarRightCamera':
-            offset_h_1 = 300
-            offset_h_2 = 300
         scaled_K[0][2] = intrinsics[0][2] * 2
-        scaled_K[1][2] = intrinsics[1][2] * 2 - offset_h_1
+        scaled_K[1][2] = intrinsics[1][2] * 2 - offset_h1  # Use offset_h1
         output = template()
         output['intrinsics']['Fx'] = scaled_K[0][0]
         output['intrinsics']['Fy'] = scaled_K[1][1]
         output['intrinsics']['Cx'] = scaled_K[0][2]
         output['intrinsics']['Cy'] = scaled_K[1][2]
-        
+
         # Serializing json
         json_object = json.dumps(output, indent=2)
 

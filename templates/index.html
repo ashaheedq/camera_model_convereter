@@ -13,10 +13,21 @@
   <div style="color:rgb(255, 0, 0);text-align:center; font-size: 36px;"> 
     ONLY JSON FILES
   </div>
+
+  <!-- Input fields for offsets -->
+  <form id="offsetForm">
+    <label for="offset_h1">Offset H1:</label>
+    <input type="number" id="offset_h1" name="offset_h1" placeholder="Default: 300">
+
+    <label for="offset_h2">Offset H2:</label>
+    <input type="number" id="offset_h2" name="offset_h2" placeholder="Default: 700">
+  </form>
+
+  <!-- Dropzone for file uploads -->
   {{ dropzone.create(action='upload') }}
   {{ dropzone.load_js() }}
   {{ dropzone.config() }}
-  
+
   <script>
     Dropzone.options.myDropzone = {
       paramName: "file", // Name of the file parameter
@@ -29,6 +40,14 @@
           const uniqueTs = Date.now() + "_" + Math.random().toString(36).substring(2, 15);
           formData.append("timestamp", uniqueTs);
           file.timestamp = uniqueTs; // Save timestamp for later use
+
+          // Get values from the offset input fields
+          const offsetH1 = document.getElementById("offset_h1").value || 300; // Default: 300
+          const offsetH2 = document.getElementById("offset_h2").value || 700; // Default: 700
+
+          // Add offsets to the form data
+          formData.append("offset_h1", offsetH1);
+          formData.append("offset_h2", offsetH2);
         });
 
         this.on("success", function(file) {
@@ -66,8 +85,7 @@
         });
       }
     };
-</script>
-
+  </script>
 
   <style>
     .button {
@@ -80,6 +98,19 @@
     }
     #dl {
       background-color: #e30606;
+    }
+    #offsetForm {
+      margin: 20px;
+      text-align: center;
+    }
+    #offsetForm label {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    #offsetForm input {
+      margin-right: 20px;
+      padding: 5px;
+      font-size: 16px;
     }
   </style>
 </body>
